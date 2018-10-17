@@ -1,0 +1,45 @@
+* {
+    box-sizing: border-box;
+    font-family: Lato;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    max-width: 80%;
+    margin: auto;
+}
+
+.logo {
+    display: block;
+    margin: 0 auto;
+}
+
+.title {
+    text-align: center;
+}
+
+.content {}
+
+.content-title {
+    position: relative;
+
+}
+
+.content-title:after {
+    content: ' ';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border-bottom: 1px solid #7400be;
+
+
+}
+
+.content-text {}
+
+.footer {
+    padding: 5px 20px;
+    background-color: #cc7cff;
+}
