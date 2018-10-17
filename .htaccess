@@ -1,0 +1,4 @@
+Options -Indexes
+
+RewriteEngine on
+RewriteRule  ^/essence/([a-zA-Z-]+)/([a-zA-Z-]+)$ /essence/?controller=$1&action=$2 [L]
