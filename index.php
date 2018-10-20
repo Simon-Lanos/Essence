@@ -14,7 +14,7 @@ spl_autoload_register(function ($class) {
 set_error_handler(function ($nbr, $message) {
     var_dump($message);
     die('The called Controller does not exist');
-}, E_ALL);
+}, E_COMPILE_ERROR);
 
 //router
 if (isset($_GET['controller'])) {
