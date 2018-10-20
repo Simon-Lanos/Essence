@@ -1,5 +1,6 @@
 <?php
 
+namespace App\Response;
 class Data
 {
     protected $json;

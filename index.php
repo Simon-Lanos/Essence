@@ -39,7 +39,7 @@ if ($response instanceof App\Response\View) {
     /** @var App\Response\View $response */
     echo $response->display();
 } else {
-    /** @var Data $response */
+    /** @var App\Response\Data $response */
     echo $response->getJson();
 }
 
