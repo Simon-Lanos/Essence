@@ -10,6 +10,7 @@ class Form
     const SUBMIT_TYPE = 4;
 
     private $form;
+    private $register;
 
     /**
      * Form constructor.
@@ -17,6 +18,7 @@ class Form
     public function __construct()
     {
         $this->form[0] = array();
+        $this->register = array();
     }
 
     /**
@@ -50,6 +52,10 @@ class Form
                 break;
             default:
                 die('The type '.$type.' does not exist');
+        }
+
+        if ($type != Form::SUBMIT_TYPE) {
+            $this->register($name);
         }
 
         $this->form[0][$name] = $entry;
@@ -206,5 +212,17 @@ class Form
         }
 
         return $entry;
+    }
+
+    /**
+     * @param $name string
+     */
+    private function register($name)
+    {
+        if (!in_array($name, $this->register)) {
+            $this->register[] = $name;
+        } else {
+            throw new \DomainException('One field is already named '.$name);
+        }
     }
 }
