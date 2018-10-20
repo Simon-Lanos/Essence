@@ -42,4 +42,3 @@ if ($response instanceof App\Response\View) {
     /** @var App\Response\Data $response */
     echo $response->getJson();
 }
-
