@@ -55,7 +55,7 @@ class Form
         }
 
         if ($type != Form::SUBMIT_TYPE) {
-            $this->register($name);
+            $this->register($name, $type);
         }
 
         $this->form[0][$name] = $field;
@@ -216,11 +216,15 @@ class Form
 
     /**
      * @param $name string
+     * @param $type int
      */
-    private function register($name)
+    private function register($name, $type)
     {
         if (!in_array($name, $this->register)) {
-            $this->register[] = $name;
+            $this->register[] = [
+                'name' => $name,
+                'type' => $type
+            ];
         } else {
             throw new \DomainException('One field is already named '.$name);
         }
