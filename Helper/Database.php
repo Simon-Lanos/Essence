@@ -1,5 +1,7 @@
 <?php
 
+namespace Helper;
+
 class Database
 {
     //Faille de sécurité - Prévoir moyen de se connecter à la ddb plus "sécurisé"
@@ -12,9 +14,9 @@ class Database
     function __construct()
     {
         try {
-            $this->db = new PDO($this->dsn, $this->userdsn, $this->passworddsn);
-            $this -> db -> setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
+            $this->db = new \PDO($this->dsn, $this->userdsn, $this->passworddsn);
+            $this -> db -> setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
             Log::logWrite($e->getMessage());
             echo $e;
         }
@@ -35,7 +37,7 @@ class Database
             $stmt->execute();
             return $stmt;
 
-        } catch (PDOException $e) {
+        } catch (\PDOException $e) {
             Log::logWrite($e->getMessage());
             echo $e;
         }
