@@ -11,6 +11,9 @@ class Form
 
     private $form;
     private $register;
+    private $data;
+    private $isSubmitted;
+    private $isHandled;
 
     /**
      * Form constructor.
@@ -19,6 +22,9 @@ class Form
     {
         $this->form[0] = array();
         $this->register = array();
+        $this->data = array();
+        $this->isSubmitted = false;
+        $this->isHandled = false;
     }
 
     /**
@@ -27,6 +33,40 @@ class Form
     public function getForm()
     {
         return $this->form;
+    }
+
+    /**
+     * Ask the FormHelper to handle the request
+     */
+    public function handleRequest()
+    {
+        $this->handle();
+        //try to fetch inputs that are register on the current form
+        foreach ($this->register as $field) {
+            if (isset($_POST[$field['name']])) {
+                //pull the input value into the data array
+                $this->data[$field['name']] = htmlspecialchars($_POST[$field['name']]);
+                //set the form to a submitted state
+                $this->submit();
+            }
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSubmitted()
+    {
+        return $this->isSubmitted;
+    }
+
+    public function getData()
+    {
+        if ($this->isHandled()) {
+            return $this->data;
+        } else {
+            throw new \DomainException('The Form is not handled');
+        }
     }
 
     /**
@@ -228,5 +268,26 @@ class Form
         } else {
             throw new \DomainException('One field is already named '.$name);
         }
+    }
+
+    /**
+     * set isSubmitted to true
+     */
+    private function submit()
+    {
+        $this->isSubmitted = true;
+    }
+
+    /**
+     * set isHandle to true
+     */
+    private function handle()
+    {
+        $this->isHandled = true;
+    }
+
+    private function isHandled()
+    {
+        return $this->isHandled;
     }
 }
