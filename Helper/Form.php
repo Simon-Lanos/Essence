@@ -78,7 +78,7 @@ class Form
         } else {
             $input = '
                         <label for="'.$name.'" class="{labelClass}">{label}</label>
-                        <input class="{class}" type="text">
+                        <input id="'.$name.'" class="{class}" type="text" name="'.$name.'">
                     ';
 
             if (isset($options['label'])) {
@@ -119,7 +119,7 @@ class Form
         } else {
             $input = '
                         <label for="'.$name.'" class="{labelClass}">{label}</label>
-                        <input class="{class}" type="email">
+                        <input id="'.$name.'" class="{class}" type="email" name="'.$name.'">
                     ';
 
             if (isset($options['label'])) {
@@ -160,7 +160,7 @@ class Form
         } else {
             $input = '
                         <label for="'.$name.'" class="{labelClass}">{label}</label>
-                        <input class="{class}" type="password">
+                        <input id="'.$name.'" class="{class}" type="password" name="'.$name.'">
                     ';
 
             if (isset($options['label'])) {
