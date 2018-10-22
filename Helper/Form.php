@@ -70,178 +70,110 @@ class Form
     }
 
     /**
-     * @param $name string
+     * @param $fieldName string
      * @param $type
      * @param $options null|array
      * @return $this
      */
-    public function add($name, $type, $options = null)
+    public function add($fieldName, $type, $options = array())
     {
         switch ($type) {
-            case 1:
-                $field = $this->getTextInput($name, $options);
+            case self::TEXT_TYPE:
+                $field = $this->getInput($fieldName, 'text', $options);
                 break;
-            case 2:
-                $field = $this->getEmailInput($name, $options);
+            case self::EMAIL_TYPE:
+                $field = $this->getInput($fieldName, 'email', $options);
                 break;
-            case 3:
-                $field = $this->getPasswordInput($name, $options);
+            case self::PASSWORD_TYPE:
+                $field = $this->getInput($fieldName, 'password', $options);
                 break;
-            case 4:
-                $field = $this->getSubmitButton($name, $options);
+            case self::SUBMIT_TYPE:
+                $field = $this->getSubmit($fieldName, $options);
                 break;
             default:
                 die('The type '.$type.' does not exist');
         }
 
         if ($type != Form::SUBMIT_TYPE) {
-            $this->register($name, $type);
+            $this->register($fieldName, $type);
         }
 
-        $this->form[0][$name] = $field;
+        $this->form[0][$fieldName] = $field;
         return $this;
     }
 
     /**
-     * @param $name string
+     * @param $fieldName string
+     * @param $type string
      * @param $options array|null
      * @return string
      */
-    private function getTextInput($name, $options)
+    private function getInput($fieldName, $type, $options)
     {
-
-        if ($options == null) {
-            $input = '
-                    <label for="'.$name.'">'.$name.'</label>
-                    <input id="'.$name.'" type="text" name="'.$name.'">
-                    ';
+        if (empty($options)) {
+            $input = '<input id="'.$fieldName.'" type="'.$type.'" name="'.$fieldName.'"/>';
+            $label = '<label for="'.$fieldName.'">'.$fieldName.'</label>';
         } else {
-            $input = '
-                        <label for="'.$name.'" class="{labelClass}">{label}</label>
-                        <input id="'.$name.'" class="{class}" type="text" name="'.$name.'">
-                    ';
+            $input = '<input id="{id}" class="{class}" {required} type="'.$type.' name="'.$fieldName.'"/>';
+            $label = '<label for="{id}" class="{labelClass}">{label}</label>';
+        }
 
-            if (isset($options['label'])) {
-                $input = str_replace('{label}', $options['label'], $input);
+        if (isset($options['label'])) {
+            if ($options['label'] === false) {
+                $label = '';
             } else {
-                $input = str_replace('{label}', $name, $input);
-            }
-
-            if (isset($options['class'])) {
-                $input = str_replace('{class}', $options['label'], $input);
-            } else {
-                $input = str_replace('{class}', '', $input);
-            }
-
-            if (isset($options['labelClass'])) {
-                $input = str_replace('{labelClass}', $options['labelClass'], $input);
-            } else {
-                $input = str_replace('{labelClass}', '', $input);
+                $label = str_replace('{label}', $options['label'], $label);
             }
         }
 
-        return $input;
-    }
-
-    /**
-     * @param $name string
-     * @param $options array|null
-     * @return string
-     */
-    private function getEmailInput($name, $options)
-    {
-
-        if ($options == null) {
-            $input = '
-                    <label for="'.$name.'">'.$name.'</label>
-                    <input id="'.$name.'" type="email" name="'.$name.'">
-                    ';
+        if (isset($options['class'])) {
+            $input = str_replace('{class}', $options['class'], $input);
         } else {
-            $input = '
-                        <label for="'.$name.'" class="{labelClass}">{label}</label>
-                        <input id="'.$name.'" class="{class}" type="email" name="'.$name.'">
-                    ';
-
-            if (isset($options['label'])) {
-                $input = str_replace('{label}', $options['label'], $input);
-            } else {
-                $input = str_replace('{label}', $name, $input);
-            }
-
-            if (isset($options['class'])) {
-                $input = str_replace('{class}', $options['label'], $input);
-            } else {
-                $input = str_replace('{class}', '', $input);
-            }
-
-            if (isset($options['labelClass'])) {
-                $input = str_replace('{labelClass}', $options['labelClass'], $input);
-            } else {
-                $input = str_replace('{labelClass}', '', $input);
-            }
+            $input = str_replace('{class}', '', $input);
         }
 
-        return $input;
-    }
-
-    /**
-     * @param $name string
-     * @param $options array|null
-     * @return string
-     */
-    private function getPasswordInput($name, $options)
-    {
-
-        if ($options == null) {
-            $input = '
-                    <label for="'.$name.'">'.$name.'</label>
-                    <input id="'.$name.'" type="password" name="'.$name.'">
-                    ';
+        if (isset($options['labelClass'])) {
+            $label = str_replace('{labelClass}', $options['labelClass'], $label);
         } else {
-            $input = '
-                        <label for="'.$name.'" class="{labelClass}">{label}</label>
-                        <input id="'.$name.'" class="{class}" type="password" name="'.$name.'">
-                    ';
-
-            if (isset($options['label'])) {
-                $input = str_replace('{label}', $options['label'], $input);
-            } else {
-                $input = str_replace('{label}', $name, $input);
-            }
-
-            if (isset($options['class'])) {
-                $input = str_replace('{class}', $options['label'], $input);
-            } else {
-                $input = str_replace('{class}', '', $input);
-            }
-
-            if (isset($options['labelClass'])) {
-                $input = str_replace('{labelClass}', $options['labelClass'], $input);
-            } else {
-                $input = str_replace('{labelClass}', '', $input);
-            }
+            $label = str_replace('{labelClass}', '', $label);
         }
 
-        return $input;
+        if (isset($options['id'])) {
+            $input = str_replace('{id}', $options['id'], $input);
+            $label = str_replace('{id}', $options['id'], $label);
+        } else {
+            $input = str_replace('{id}', $fieldName, $input);
+            $label = str_replace('{id}', $fieldName, $label);
+        }
+
+        if (isset($options['required'])) {
+            $input = str_replace('{required}', 'required="true"', $input);
+        } else {
+            $input = str_replace('{required}', '', $input);
+        }
+
+        $field = $label . $input;
+
+        return $field;
     }
 
     /**
-     * @param $name string
+     * @param $fieldName string
      * @param $options array|null
      * @return string
      */
-    private function getSubmitButton($name, $options)
+    private function getSubmit($fieldName, $options)
     {
 
         if ($options == null) {
-            $button = '<button type="submit">'.$name.'</button>';
+            $button = '<button type="submit">'.$fieldName.'</button>';
         } else {
             $button = '<button class="{class}" type="submit">{label}</button>';
 
             if (isset($options['label'])) {
                 $button = str_replace('{label}', $options['label'], $button);
             } else {
-                $button = str_replace('{label}', $name, $button);
+                $button = str_replace('{label}', $fieldName, $button);
             }
 
             if (isset($options['class'])) {
