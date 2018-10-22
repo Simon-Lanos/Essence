@@ -20,7 +20,7 @@ class Form
      */
     public function __construct()
     {
-        $this->form[0] = array();
+        $this->form = array();
         $this->register = array();
         $this->data = array();
         $this->isSubmitted = false;
@@ -28,11 +28,11 @@ class Form
     }
 
     /**
-     * @return string
+     * @return array
      */
     public function getForm()
     {
-        return $this->form;
+        return array($this->form);
     }
 
     /**
@@ -98,7 +98,7 @@ class Form
             $this->register($fieldName, $type);
         }
 
-        $this->form[0][$fieldName] = $field;
+        $this->form[$fieldName] = $field;
         return $this;
     }
 
