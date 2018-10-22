@@ -114,7 +114,7 @@ class Form
             $input = '<input id="'.$fieldName.'" type="'.$type.'" name="'.$fieldName.'"/>';
             $label = '<label for="'.$fieldName.'">'.$fieldName.'</label>';
         } else {
-            $input = '<input id="{id}" class="{class}" {required} type="'.$type.' name="'.$fieldName.'"/>';
+            $input = '<input id="{id}" class="{class}" {required} type="'.$type.'" name="'.$fieldName.'"/>';
             $label = '<label for="{id}" class="{labelClass}">{label}</label>';
         }
 
