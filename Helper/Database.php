@@ -12,6 +12,7 @@ class Database
     private $dsn = '';
     private $user = '';
     private $password = '';
+    private $parameter;
     private $db;
 
     /**
@@ -26,6 +27,7 @@ class Database
             Log::logWrite($e->getMessage());
             echo $e;
         }
+        $this->parameter = array();
     }
 
     /**
@@ -35,6 +37,7 @@ class Database
     public function select($sql)
     {
         $stmt = $this->db->prepare($sql);
+        $this->bindParameter($stmt);
         $stmt->execute();
         return $stmt->fetchAll();
     }
@@ -48,10 +51,11 @@ class Database
 
         try {
             $stmt = $this->db->prepare($sql);
+            $this->bindParameter($stmt);
             $stmt->execute();
             return $stmt;
 
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             Log::logWrite($e->getMessage());
             echo $e;
         }
@@ -73,5 +77,27 @@ class Database
     {
         $this->parameter[] = $parameter;
     }
+
+    /**
+     * @param $stmt PDOStatement
+     */
+    private function bindParameter(PDOStatement $stmt)
+    {
+        foreach ($this->parameter as $parameters) {
+            foreach ($parameters as $param => $value) {
+
+                switch (gettype($value)) {
+                    case 'integer':
+                        $type = PDO::PARAM_INT;
+                        break;
+                    default:
+                        $type = PDO::PARAM_STR;
+                        break;
+                }
+
+                $stmt->bindValue($param, $value, $type);
+            }
+            unset($parameter);
+        }
     }
 }
