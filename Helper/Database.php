@@ -58,8 +58,20 @@ class Database
         return false;
     }
 
-    function __destruct()
+    /**
+     * @return string
+     */
+    public function lastInsertId()
     {
-        unset($this->db);
+        return $this->db->lastInsertId();
+    } 
+
+    /**
+     * @param $parameter array
+     */
+    public function setParameter($parameter)
+    {
+        $this->parameter[] = $parameter;
+    }
     }
 }
