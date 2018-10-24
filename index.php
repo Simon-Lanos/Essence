@@ -32,7 +32,7 @@ if (isset($_GET['action'])) {
 $control = new $controller();
 try {
     $response = $control->$action();
-} catch (Error $error) {
+} catch (BadMethodCallException $error) {
     die('The called Action does not exist');
 }
 if ($response instanceof App\Response\View) {
