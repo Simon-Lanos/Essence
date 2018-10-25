@@ -9,7 +9,7 @@ class DefaultController
     /**
      * @return View
      */
-    function DefaultAction()
+    function defaultAction()
     {
 
         return new View('default');

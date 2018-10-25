@@ -18,9 +18,9 @@ set_error_handler(function ($nbr, $message) {
 
 //router
 if (isset($_GET['controller'])) {
-    $controller = 'App\Controller\\' . $_GET['controller'] . 'Controller';
+    $controller = 'App\Controller\\' . ucfirst($_GET['controller']) . 'Controller';
 } else {
-    $controller = 'App\Controller\\' . 'DefaultController';
+    $controller = 'App\Controller\\' . 'defaultController';
 }
 
 if (isset($_GET['action'])) {
