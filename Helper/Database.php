@@ -23,6 +23,7 @@ class Database
         try {
             $this->db = new PDO($this->dsn, $this->user, $this->password);
             $this->db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            $this->db->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
         } catch (PDOException $e) {
             Log::logWrite($e->getMessage());
             echo $e;
