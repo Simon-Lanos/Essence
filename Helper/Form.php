@@ -8,6 +8,7 @@ class Form
     const EMAIL_TYPE = 2;
     const PASSWORD_TYPE = 3;
     const SUBMIT_TYPE = 4;
+    const FILE_TYPE = 5;
 
     private $form;
     private $register;
@@ -48,6 +49,9 @@ class Form
                 $this->data[$field['name']] = htmlspecialchars($_POST[$field['name']]);
                 //set the form to a submitted state
                 $this->submit();
+            } elseif (isset($_FILES[$field['name']]) && $_FILES[$field['name']]['error'] === 0) {
+                $this->data[$field['name']] = $_FILES[$field['name']];
+                $this->submit();
             }
         }
     }
@@ -86,6 +90,9 @@ class Form
                 break;
             case self::PASSWORD_TYPE:
                 $field = $this->getInput($fieldName, 'password', $options);
+                break;
+            case self::FILE_TYPE:
+                $field = $this->getInput($fieldName, 'file', $options);
                 break;
             case self::SUBMIT_TYPE:
                 $field = $this->getSubmit($fieldName, $options);
