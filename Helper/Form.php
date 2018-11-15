@@ -117,46 +117,64 @@ class Form
      */
     private function getInput($fieldName, $type, $options)
     {
-        if (empty($options)) {
-            $input = '<input id="'.$fieldName.'" type="'.$type.'" name="'.$fieldName.'"/>';
-            $label = '<label for="'.$fieldName.'">'.$fieldName.'</label>';
-        } else {
-            $input = '<input id="{id}" class="{class}"{required}type="'.$type.'" name="'.$fieldName.'"/>';
-            $label = '<label for="{id}" class="{labelClass}">{label}</label>';
-        }
+        $allOptions = [
+            'class' => '',
+            'id' => $fieldName,
+            'label' => $fieldName,
+            'labelClass' => '',
+            'name' => $fieldName,
+            'required' => false,
+            'type' => $type,
+        ];
 
-        if (isset($options['label'])) {
-            if ($options['label'] === false) {
-                $label = '';
+        //replace values in $allOptions with corresponding $options values
+        foreach ($options as $optName => $optValue) {
+            if (isset($allOptions[$optName])) {
+                $allOptions[$optName] = $optValue;
             } else {
-                $label = str_replace('{label}', $options['label'], $label);
+                throw new \DomainException('The option ' . $optName . ' isn\'t a correct one');
             }
         }
 
-        if (isset($options['class'])) {
-            $input = str_replace('{class}', $options['class'], $input);
-        } else {
-            $input = str_replace('{class}', '', $input);
+        $input = '<input {inputOption}/>';
+        $label = '<label {labelOption}</label>';
+
+        $inputOption = '';
+        $labelOption = '';
+
+        foreach ($allOptions as $optName => $optValue) {
+            switch ($optName) {
+                case 'class':
+                    $inputOption .= 'class="' . $optValue . '" ';
+                    break;
+                case 'id':
+                    $inputOption .= 'id="' . $optValue . '" ';
+                    $labelOption .= 'for="' . $optValue . '" ';
+                    break;
+                case 'labelClass':
+                    $labelOption .= 'class="' . $optValue . '" ';
+                    break;
+                case 'name':
+                    $inputOption .= 'name="' . $optValue . '" ';
+                    break;
+                case 'required':
+                    if ($optValue === true) {
+                        $inputOption .= 'required="required" ';
+                    }
+                    break;
+                case 'type':
+                    $inputOption .= 'type="' . $optValue . '" ';
+                    break;
+            }
         }
 
-        if (isset($options['labelClass'])) {
-            $label = str_replace('{labelClass}', $options['labelClass'], $label);
-        } else {
-            $label = str_replace('{labelClass}', '', $label);
-        }
+        $labelOption .= '>' . $allOptions['label'];
 
-        if (isset($options['id'])) {
-            $input = str_replace('{id}', $options['id'], $input);
-            $label = str_replace('{id}', $options['id'], $label);
-        } else {
-            $input = str_replace('{id}', $fieldName, $input);
-            $label = str_replace('{id}', $fieldName, $label);
-        }
+        $input = str_replace('{inputOption}', $inputOption, $input);
+        $label = str_replace('{labelOption}', $labelOption, $label);
 
-        if (isset($options['required'])) {
-            $input = str_replace('{required}', ' required="true" ', $input);
-        } else {
-            $input = str_replace('{required}', ' ', $input);
+        if ($allOptions['label'] === false) {
+            $label = '';
         }
 
         $field = $label . $input;
