@@ -190,23 +190,35 @@ class Form
     private function getSubmit($fieldName, $options)
     {
 
-        if ($options == null) {
-            $button = '<button type="submit">'.$fieldName.'</button>';
-        } else {
-            $button = '<button class="{class}" type="submit">{label}</button>';
+        $allOptions = [
+            'label' => $fieldName,
+            'class' => '',
+        ];
 
-            if (isset($options['label'])) {
-                $button = str_replace('{label}', $options['label'], $button);
+        //replace values in $allOptions with corresponding $options values
+        foreach ($options as $optName => $optValue) {
+            if (isset($allOptions[$optName])) {
+                $allOptions[$optName] = $optValue;
             } else {
-                $button = str_replace('{label}', $fieldName, $button);
-            }
-
-            if (isset($options['class'])) {
-                $button = str_replace('{class}', $options['label'], $button);
-            } else {
-                $button = str_replace('{class}', '', $button);
+                throw new \DomainException('The option ' . $optName . ' isn\'t a correct one');
             }
         }
+
+        $button = '<button {buttonOption}</button>';
+
+        $buttonOption = '';
+
+        foreach ($allOptions as $optName => $optValue) {
+            switch ($optName) {
+                case 'class':
+                    $buttonOption .= 'class="' . $optValue . '" ';
+                    break;
+            }
+        }
+
+        $buttonOption .= '>' . $allOptions['label'];
+
+        $button = str_replace('{buttonOption}', $buttonOption, $button);
 
         return $button;
     }
