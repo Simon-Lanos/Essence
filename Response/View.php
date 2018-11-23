@@ -30,37 +30,57 @@ class View
 
     private function parse()
     {
-        foreach ($this->data as $key=>$value) {
-
+        foreach ($this->data as $key => $value) {
             //si la ligne est un tableau
-            if (is_array($this->data[$key])) {
+            if (is_array($value)) {
 
-                $partialData = $this->data[$key];
+                //initialise la partial
+                $partialTemplate = $this->getPartial($key);
+                $partial = '';
 
-                $partials = '';
-                //on parse le tableau
-                foreach ($partialData as $va) {
-                    //on charge la partial du nom du tableau
-                    $partial = $this->loadPartial($key);
-                    //on boucle sur les tableau pour remplacer les placeholder de la partial
-                    foreach ($va as $k=>$v) {
-                        $partial = str_replace('['.$k.']',$v, $partial);
-                    }
-                    //on stock la partial comléter dans cette variable
-                    $partials .= $partial;
+                //on boucle sur le tableau
+                foreach ($value as $data) {
+                    //ajoute un instance completé de la partial
+                    $partial .= $this->loadPartial($partialTemplate, $data);
                 }
-                //on fini par rempacer la valeur de la ligne de départ par notre chaine de charactère
-                $this->template = str_replace('['.$key.']',$partials, $this->template);
-            }
-            else {
-                $this->template = str_replace('['.$key.']',$value, $this->template);
+                $this->template = str_replace('[' . $key . ']', $partial, $this->template);
+            } else {
+                $this->template = str_replace('[' . $key . ']', $value, $this->template);
             }
         }
     }
 
-    private function loadPartial($partial)
+    /**
+     * @param $partial
+     * @return bool|string
+     */
+    private function getPartial($partial)
     {
         $partial = file_get_contents('./Assets/partials/'.$partial.'.php');
+        return $partial;
+    }
+
+    /**
+     * @param string $partial
+     * @param array $partialData
+     * @return string
+     */
+    private function loadPartial($partial, array $partialData)
+    {
+        foreach ($partialData as $key => $data) {
+            if (is_array($data)) {
+
+                $subPartial = $this->getPartial($key);
+                $completeSubPartial = '';
+
+                foreach ($data as $value) {
+                    $completeSubPartial .= $this->loadPartial($subPartial, $value);
+                }
+                $partial = str_replace('[' . $key . ']', $completeSubPartial, $partial);
+            } else {
+                $partial = str_replace('[' . $key . ']', $data, $partial);
+            }
+        }
         return $partial;
     }
 }
