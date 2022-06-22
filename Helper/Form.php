@@ -9,6 +9,7 @@ class Form
     const PASSWORD_TYPE = 3;
     const SUBMIT_TYPE = 4;
     const FILE_TYPE = 5;
+    const CHECK_BOX_TYPE = 6;
 
     private $form;
     private $register;
